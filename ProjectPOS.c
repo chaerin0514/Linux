@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-//#include <Windows.h>
 
 #define USER 100
 #define ID_SIZE 20
@@ -11,7 +10,6 @@
 #define PRODUCT 100
 #define PNAME_SIZE 50
 #define PCOMPANY_SIZE 50
-#define PDATE_SIZE 10
 
 struct Person {
     char id[ID_SIZE];
@@ -36,7 +34,11 @@ struct Pdate {
 };
 struct Pdate pdate[PRODUCT];
 
-int enter_info(time_t* start,int,int,int);
+void clear_screen() {
+    system("clear");
+}
+
+int enter_info(time_t* start, int, int, int);
 int add_employee(int, int, int, int);
 int product_input(int,int,int);
 int product_inventory(int,int,int);
@@ -51,259 +53,195 @@ int main() {
     int year, month, day;
     time_t start = 0;
 
-    printf("¿À´Ã ³¯Â¥(YYYY-MM-DD) : ");
+    printf("ì˜¤ëŠ˜ ë‚ ì§œ(YYYY-MM-DD) : ");
     scanf("%d-%d-%d", &year, &month, &day);
 
-    printf("\n»ç¿ø µî·Ï ÈÄ ·Î±×ÀÎ ÇØÁÖ¼¼¿ä.\n\n");
-    printf("Ãß°¡ÇÒ »ç¿øÀÇ ¼ö : ");
+    printf("\nì‚¬ì› ë“±ë¡ í›„ ë¡œê·¸ì¸ í•´ì£¼ì„¸ìš”.\n\n");
+    printf("ì¶”ê°€í•  ì‚¬ì›ì˜ ìˆ˜ : ");
     scanf("%d", &n1);
     add_employee(n1, year, month, day);
 
-    printf("\n·Î±×ÀÎ È­¸éÀ¸·Î ÀÌµ¿ÇÕ´Ï´Ù.\n\n");
-    enter_info(&start,year,month,day);
+    printf("\në¡œê·¸ì¸ í™”ë©´ìœ¼ë¡œ ì´ë™í•©ë‹ˆë‹¤.\n\n");
+    enter_info(&start, year, month, day);
 
-    printf("Ã³À½ ½ÃÀÛÇÒ ¶§´Â Á¦Ç° µî·ÏºÎÅÍ ÇÏ¼¼¿ä.\n");
+    printf("ì²˜ìŒ ì‹œì‘í•  ë•ŒëŠ” ì œí’ˆ ë“±ë¡ë¶€í„° í•˜ì„¸ìš”.\n");
 
     while (1) {
-        printf("\n\n½ÇÇàÇÒ ¸Ş´º¸¦ ¼±ÅÃÇÏ¼¼¿ä.\n\n");
-        printf("1. Á¦Ç° µî·Ï 2. Á¦Ç° °Ë»ö 3. Á¦Ç° Àç°í È®ÀÎ 4. Á¦Ç° ÀÔ°í 5. °è»ê 6. Á¾·á => ");
+        printf("\n\nì‹¤í–‰í•  ë©”ë‰´ë¥¼ ì„ íƒí•˜ì„¸ìš”.\n\n");
+        printf("1. ì œí’ˆ ë“±ë¡ 2. ì œí’ˆ ê²€ìƒ‰ 3. ì œí’ˆ ì¬ê³  í™•ì¸ 4. ì œí’ˆ ì…ê³  5. ê³„ì‚° 6. ì¢…ë£Œ => ");
         scanf("%d", &n2);
 
         switch (n2) {
-        case 1:
-            product_input(year, month, day);
-            break;
-        case 2:
-            product_search(year, month, day);
-            break;
-        case 3:
-            product_inventory(year, month, day);
-            break;
-        case 4:
-            product_warehousing(year, month,day);
-            break;
-        case 5:
-            product_pay(year, month, day, &balance);
-            break;
-        case 6:
-            program_end(start, &balance);
-            return 0;
-        default:
-            printf("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù. ´Ù½Ã ¼±ÅÃÇÏ¼¼¿ä.\n");
+            case 1: product_input(year, month, day); break;
+            case 2: product_search(year, month, day); break;
+            case 3: product_inventory(year, month, day); break;
+            case 4: product_warehousing(year, month, day); break;
+            case 5: product_pay(year, month, day, &balance); break;
+            case 6: program_end(start, &balance); return 0;
+            default: printf("ì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤. ë‹¤ì‹œ ì„ íƒí•˜ì„¸ìš”.\n"); break;
         }
     }
 }
 
-//·Î±×ÀÎ ÇÔ¼ö
 int enter_info(time_t* start, int y, int m, int d) {
     int n1, n3;
     char id1[ID_SIZE], password1[PASSWORD_SIZE];
 
-    printf("\n----- ·Î±×ÀÎ È­¸é -----\n\n");
-    printf("»ç¿ø¹øÈ£ ÀÔ·Â : ");
-    scanf("%d", &n1);
-    printf("¾ÆÀÌµğ : ");
-    scanf("%s", id1);
-    printf("ºñ¹Ğ¹øÈ£ : ");
-    scanf("%s", password1);
+    printf("\n----- ë¡œê·¸ì¸ í™”ë©´ -----\n\n");
+    printf("ì‚¬ì›ë²ˆí˜¸ ì…ë ¥ : "); scanf("%d", &n1);
+    printf("ì•„ì´ë”” : "); scanf("%s", id1);
+    printf("ë¹„ë°€ë²ˆí˜¸ : "); scanf("%s", password1);
 
     if (strcmp(id1, person[n1 - 1].id) == 0 && strcmp(password1, person[n1 - 1].password) == 0) {
-        printf("\n----- ·Î±×ÀÎ ¿Ï·á !! -----\n\n");
-       
-        system("clear");
-        printf("***** »ç¿ø Á¤º¸ *****\n\n");
-        printf("¾ÆÀÌµğ : %s\n", person[n1 - 1].id);
-        printf("ÀÌ¸§ : %s\n\n", person[n1 - 1].name);
-        printf("*********************\n\n");
-
-        printf("¾ÆÀÌµğ¿Í ÀÌ¸§ÀÌ ¸ÂÀ¸¸é È®ÀÎÀ» ´­·¯ÁÖ¼¼¿ä.\n");
-        printf("1. È®ÀÎ 2. Ãë¼Ò => ");
+        printf("\n----- ë¡œê·¸ì¸ ì™„ë£Œ !! -----\n\n");
+        clear_screen();
+        printf("***** ì‚¬ì› ì •ë³´ *****\n\nì•„ì´ë”” : %s\nì´ë¦„ : %s\n\n*********************\n\n", person[n1 - 1].id, person[n1 - 1].name);
+        printf("ì•„ì´ë””ì™€ ì´ë¦„ì´ ë§ìœ¼ë©´ í™•ì¸ì„ ëˆŒëŸ¬ì£¼ì„¸ìš”.\n1. í™•ì¸ 2. ì·¨ì†Œ => ");
         scanf("%d", &n3);
-        printf("\n\n");
-
         if (n3 == 1) {
             *start = time(NULL);
-        
-            system("clear");
-            printf("Today : %d - %d - %d\n\n", y,m,d);
+            clear_screen();
+            printf("Today : %d - %d - %d\n\n", y, m, d);
             return 0;
         }
     }
-    printf("·Î±×ÀÎ ½ÇÆĞ. ´Ù½Ã ½ÃµµÇÏ¼¼¿ä.\n");
-
-    system("clear");
+    printf("ë¡œê·¸ì¸ ì‹¤íŒ¨. ë‹¤ì‹œ ì‹œë„í•˜ì„¸ìš”.\n");
+    clear_screen();
     printf("Today : %d - %d - %d\n\n", y, m, d);
-    return enter_info(start,y,m,d);
+    return enter_info(start, y, m, d);
 }
 
-//»ç¿ø µî·Ï ÇÔ¼ö
 int add_employee(int n, int y, int m, int d) {
     for (int i = 0; i < n; ++i) {
-        printf("\n%d¹ø »ç¿ø µî·Ï\n\n", i + 1);
-        printf("¾ÆÀÌµğ : ");
+        printf("\n%dë²ˆ ì‚¬ì› ë“±ë¡\n\nì•„ì´ë”” : ", i + 1);
         scanf("%s", person[i].id);
-        printf("ºñ¹Ğ¹øÈ£ : ");
+        printf("ë¹„ë°€ë²ˆí˜¸ : ");
         scanf("%s", person[i].password);
-        printf("ÀÌ¸§ : ");
+        printf("ì´ë¦„ : ");
         scanf("%s", person[i].name);
     }
-    system("clear");
+    clear_screen();
     printf("Today : %d - %d - %d\n", y, m, d);
+    return 0;
 }
 
-//Á¦Ç° µî·Ï ÇÔ¼ö
-int product_input(int y,int m, int d) {
+int product_input(int y, int m, int d) {
     int n;
-    printf("\n----- Á¦Ç° µî·Ï È­¸é ----- \n\n");
-    printf("ÀÔ·ÂÇÒ Á¦Ç°ÀÇ ¼ö : ");
+    printf("\n----- ì œí’ˆ ë“±ë¡ í™”ë©´ ----- \n\nì…ë ¥í•  ì œí’ˆì˜ ìˆ˜ : ");
     scanf("%d", &n);
-
     for (int i = 0; i < n; ++i) {
-        printf("\n%d¹ø Á¦Ç°\n\n", i+1);
-        printf("Á¦Ç°¸í : ");
+        printf("\n%dë²ˆ ì œí’ˆ\n\nì œí’ˆëª… : ", i+1);
         scanf("%s", product[i].name);
-        printf("Á¦Á¶È¸»ç : ");
+        printf("ì œì¡°íšŒì‚¬ : ");
         scanf("%s", product[i].company);
-        printf("À¯Åë±âÇÑ (YYYY-MM-DD) : ");
+        printf("ìœ í†µê¸°í•œ (YYYY-MM-DD) : ");
         scanf("%d-%d-%d", &pdate[i].pyear, &pdate[i].pmonth, &pdate[i].pday);
-        printf("19±İ ¹°Ç° (1: ¿¹, 0: ¾Æ´Ï¿À) : ");
+        printf("19ê¸ˆ ë¬¼í’ˆ (1: ì˜ˆ, 0: ì•„ë‹ˆì˜¤) : ");
         scanf("%d", &product[i].product_19);
-        printf("°¡°İ : ");
+        printf("ê°€ê²© : ");
         scanf("%d", &product[i].price);
-        printf("¼ö·® : ");
+        printf("ìˆ˜ëŸ‰ : ");
         scanf("%d", &product[i].inventory);
     }
-    
-    system("clear");
+    clear_screen();
     printf("Today : %d - %d - %d\n\n", y, m, d);
+    return 0;
 }
 
-//Á¦Ç° °Ë»ö ÇÔ¼ö
-int product_search(int y,int m, int d) {
+int product_search(int y, int m, int d) {
     char name[PNAME_SIZE];
     char company[PCOMPANY_SIZE];
-    printf("\n----- Á¦Ç° °Ë»ö È­¸é -----\n\n");
-    printf("Á¦Ç°¸í : ");
+    int found = 0;
+
+    printf("\n----- ì œí’ˆ ê²€ìƒ‰ í™”ë©´ -----\n\nì œí’ˆëª… : ");
     scanf("%s", name);
-    printf("Á¦Á¶È¸»ç :");
+    printf("ì œì¡°íšŒì‚¬ : ");
     scanf("%s", company);
-    printf("\n");
 
     for (int i = 0; i < PRODUCT; ++i) {
-        if ((strcmp(name, product[i].name) == 0) && (strcmp(company, product[i].company)) == 0) {
-            printf("\nÁ¦Ç°¸í : %s\n", product[i].name);
-            printf("Á¦Á¶È¸»ç : %s\n", product[i].company);
-            printf("À¯Åë±âÇÑ : %d-%d-%d\n", pdate[i].pyear, pdate[i].pmonth, pdate[i].pday);
-            printf("°¡°İ : %d¿ø\n", product[i].price);
-            printf("Àç°í : %d°³\n", product[i].inventory);
+        if ((strcmp(name, product[i].name) == 0) && (strcmp(company, product[i].company) == 0)) {
+            printf("\nì œí’ˆëª… : %s\nì œì¡°íšŒì‚¬ : %s\nìœ í†µê¸°í•œ : %d-%d-%d\nê°€ê²© : %dì›\nì¬ê³  : %dê°œ\n",
+                   product[i].name, product[i].company, pdate[i].pyear, pdate[i].pmonth, pdate[i].pday,
+                   product[i].price, product[i].inventory);
+            found = 1;
         }
     }
-    system("clear");
+    if (!found) printf("ì œí’ˆì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
+    clear_screen();
     printf("Today : %d - %d - %d\n\n", y, m, d);
+    return 0;
 }
 
-//ÀÔ°í ÇÔ¼ö
 int product_warehousing(int y, int m, int d) {
     char name[PNAME_SIZE];
     char company[PCOMPANY_SIZE];
-    int quantity;
-    printf("\n----- Á¦Ç° ÀÔ°í È­¸é -----\n\n");
+    int quantity, found = 0;
 
-    printf("Á¦Ç°¸í : ");
+    printf("\n----- ì œí’ˆ ì…ê³  í™”ë©´ -----\n\nì œí’ˆëª… : ");
     scanf("%s", name);
-    printf("Á¦Á¶È¸»ç :");
+    printf("ì œì¡°íšŒì‚¬ : ");
     scanf("%s", company);
-    printf("¼ö·® : ");
+    printf("ìˆ˜ëŸ‰ : ");
     scanf("%d", &quantity);
 
     for (int i = 0; i < PRODUCT; ++i) {
-        if ((strcmp(name, product[i].name) == 0) && (strcmp(company, product[i].company) == 0)) { //Á¦Ç°¸í°ú Á¦Á¶È¸»ç°¡ °°À¸¸é Àç°í¿¡ ¼ö·® ´õÇÏ±â
+        if ((strcmp(name, product[i].name) == 0) && (strcmp(company, product[i].company) == 0)) {
             product[i].inventory += quantity;
-            printf("ÀÔ°í°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù !\n");
+            printf("ì…ê³ ê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤ !\n");
+            found = 1;
             break;
         }
-        else {
-            printf("Á¦Ç°À» Ã£À» ¼ö ¾ø½À´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä.\n");
-           
-            system("clear");
-            printf("Today : %d - %d - %d\n\n", y, m, d);
-
-            return product_warehousing(y, m, d);
-        }
     }
-    
-    system("clear");
+    if (!found) {
+        printf("ì œí’ˆì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”.\n");
+        return product_warehousing(y, m, d);
+    }
+    clear_screen();
     printf("Today : %d - %d - %d\n\n", y, m, d);
+    return 0;
 }
 
-//Àç°í È®ÀÎ ÇÔ¼ö
 int product_inventory(int y, int m, int d) {
-    printf("\n----- Àç°í È®ÀÎ È­¸é -----\n\n");
-
+    printf("\n----- ì¬ê³  í™•ì¸ í™”ë©´ -----\n\n");
     for (int i = 0; i < PRODUCT; ++i) {
         if (product[i].inventory > 0) {
             printf("%d. %s(%s) : ", i + 1, product[i].name, product[i].company);
-            for (int j = 0; j < product[i].inventory; ++j) {
-                printf("*");
-            }
-            printf(" (%d°³)\n", product[i].inventory);
+            for (int j = 0; j < product[i].inventory; ++j) printf("*");
+            printf(" (%dê°œ)\n", product[i].inventory);
         }
     }
-    
-    system("clear");
+    clear_screen();
     printf("Today : %d - %d - %d\n\n", y, m, d);
+    return 0;
 }
 
 int product_pay(int y, int m, int d, int* balance) {
-    int n1 = 0;
-    int n2 = 0;
-    int n3 = 0;
-    int total_price = 0;    //ÃÑ °áÁ¦±İ¾×
-    int cash = 0;               //Çö±İ
-    char card[20];          //Ä«µå¹øÈ£
-    char name[PNAME_SIZE];
-    char company[PCOMPANY_SIZE];
-    int quantity = 0;           //¼ö·®
-    int count1 = 0;
-    int count2 = 0;
+    int n1, n2, n3, total_price = 0, cash = 0, quantity = 0;
+    char name[PNAME_SIZE], company[PCOMPANY_SIZE], card[20];
 
-    printf("±¸¸ÅÇÏ´Â Á¦Ç°ÀÇ ¼ö : ");
-    scanf("%d", &n1);
+    printf("êµ¬ë§¤í•˜ëŠ” ì œí’ˆì˜ ìˆ˜ : "); scanf("%d", &n1);
 
     for (int i = 0; i < n1; ++i) {
-        printf("Á¦Ç°¸í : ");
-        scanf("%s", name);
-        printf("Á¦Á¶È¸»ç : ");
-        scanf("%s", company);
-        printf("¼ö·® : ");
-        scanf("%d", &quantity);
+        printf("ì œí’ˆëª… : "); scanf("%s", name);
+        printf("ì œì¡°íšŒì‚¬ : "); scanf("%s", company);
+        printf("ìˆ˜ëŸ‰ : "); scanf("%d", &quantity);
 
-        for (int j = 0; j < PRODUCT; ++j)
-        {
-            if (strcmp(name, product[j].name) == 0)
-            {
-                if (product[j].product_19 == 1)
-                {
-                    printf("ÁÖ¹Îµî·ÏÁõ °Ë»ç¸¦ ÇÑ ÈÄ È®ÀÎÀ» ´­·¯ÁÖ¼¼¿ä.\n");
-                    printf("1À» ´©¸£¸é È®ÀÎÀÌ ¿Ï·áµË´Ï´Ù.\n");
+        for (int j = 0; j < PRODUCT; ++j) {
+            if (strcmp(name, product[j].name) == 0 && strcmp(company, product[j].company) == 0) {
+                if (product[j].product_19 == 1) {
+                    printf("ì£¼ë¯¼ë“±ë¡ì¦ ê²€ì‚¬ë¥¼ ì™„ë£Œí–ˆìœ¼ë©´ 1ì„ ëˆ„ë¥´ì„¸ìš”: ");
                     scanf("%d", &n2);
                     if (n2 != 1) {
-                        printf("19±İ ¹°Ç°À» »©°í ´Ù½Ã °è»êÇØÁÖ¼¼¿ä.\n");
-                        
-                        system("clear");
-                        printf("Today : %d - %d - %d\n\n", y, m, d);
+                        printf("19ê¸ˆ ì œí’ˆ ì œì™¸ í›„ ë‹¤ì‹œ ê³„ì‚°í•´ì£¼ì„¸ìš”.\n");
+                        clear_screen();
                         return product_pay(y, m, d, balance);
                     }
                 }
-
                 if ((pdate[j].pyear < y) ||
                     (pdate[j].pyear == y && pdate[j].pmonth < m) ||
-                    (pdate[j].pyear == y && pdate[j].pmonth == m && pdate[j].pday < d))
-                {
-                    printf("%s(%s)Àº(´Â) À¯Åë±âÇÑÀÌ Áö³µ½À´Ï´Ù. °è»êÀ» ´Ù½Ã ÁøÇàÇØÁÖ¼¼¿ä. \n", name, product[j].company);
-                    
-                    system("clear");
-                    printf("Today : %d - %d - %d\n\n", y, m, d);
+                    (pdate[j].pyear == y && pdate[j].pmonth == m && pdate[j].pday < d)) {
+                    printf("%s(%s)ì˜ ìœ í†µê¸°í•œì´ ì§€ë‚¬ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì§„í–‰í•´ì£¼ì„¸ìš”.\n", name, company);
+                    clear_screen();
                     return product_pay(y, m, d, balance);
                 }
                 product[j].inventory -= quantity;
@@ -312,32 +250,23 @@ int product_pay(int y, int m, int d, int* balance) {
             }
         }
     }
-    
-    system("clear");
-    printf("Today : %d - %d - %d\n\n", y, m, d);
 
-    printf("ÃÑ °¡°İ : %d\n", total_price);
-    printf("°áÁ¦ ¼ö´Ü (1. Ä«µå 2. Çö±İ) : ");
+    clear_screen();
+    printf("Today : %d - %d - %d\n\nì´ ê°€ê²© : %d\nê²°ì œ ìˆ˜ë‹¨ (1. ì¹´ë“œ 2. í˜„ê¸ˆ) : ", y, m, d, total_price);
     scanf("%d", &n3);
 
     if (n3 == 1) {
-        printf("Ä«µå ¹øÈ£ ÀÔ·Â : ");
-        scanf("%s", card);
-    }
-    else
-    {
-        printf("¹ŞÀº Çö±İ : ");
-        scanf("%d", &cash);
-        printf("°Å½º¸§µ· : %d\n\n", cash - total_price);
+        printf("ì¹´ë“œ ë²ˆí˜¸ ì…ë ¥ : "); scanf("%s", card);
+    } else {
+        printf("ë°›ì€ í˜„ê¸ˆ : "); scanf("%d", &cash);
+        printf("ê±°ìŠ¤ë¦„ëˆ : %d\n\n", cash - total_price);
     }
     *balance += total_price;
-    printf("°áÁ¦ ¿Ï·á!\n");
-
-    
-    system("clear");
+    printf("ê²°ì œ ì™„ë£Œ!\n");
+    clear_screen();
     printf("Today : %d - %d - %d\n\n", y, m, d);
+    return 0;
 }
-
 
 int program_end(time_t start, int* balance) {
     time_t end = time(NULL);
@@ -345,7 +274,6 @@ int program_end(time_t start, int* balance) {
     int wage = (int)(elapsed_time * 9600);
     *balance -= wage;
 
-    printf("±Ù¹« ½Ã°£: %.2lf ºĞ\n", elapsed_time);
-    printf("ÀÏ´ç : %d¿ø\n", wage);
-    printf("ÀÜ°í: %d¿ø\n", *balance);
+    printf("ê·¼ë¬´ ì‹œê°„: %.2lf ë¶„\nì¼ë‹¹ : %dì›\nì”ê³ : %dì›\n", elapsed_time, wage, *balance);
+    return 0;
 }
